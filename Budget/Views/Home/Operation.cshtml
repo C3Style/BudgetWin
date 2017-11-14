@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Liste des opérations</title>
+</head>
+<body>
+    <div id="jsGrid"></div>
+
+    <script type="text/javascript">
+
+        /**********************************************************
+            Icon Picker
+        **********************************************************/
+        var IconPickerField = function (config) {
+            jsGrid.Field.call(this, config);
+        };
+
+        IconPickerField.prototype = new jsGrid.Field({
+            itemTemplate: function (value, object) {
+                return "<i class='fa fa-lg " + value + "'></i>"
+            },
+
+            insertTemplate: function (value) {
+                this._insertField = $("<input class='icon-picker' type='text' readonly='readonly'/>");
+                this._insertField.iconpicker(".icon-picker");
+                return this._insertField;
+            },
+
+            editTemplate: function (value, object) {
+                this._editField = $("<input class='icon-picker' type='text' />");
+                this._editField.val(value);
+                this._editField.iconpicker(".icon-picker");
+                return this._editField;
+            },
+
+            insertValue: function () {
+                if (typeof this._insertField !== "undefined") {
+                    return this._insertField.val();
+                }
+                return null;
+            },
+
+            editValue: function () {
+                if (typeof this._editField !== "undefined") {
+                    return this._editField.val();
+                }
+                return null;
+            }
+        });
+
+        jsGrid.fields.iconPickerField = IconPickerField;
+        jsGrid.locale("fr");
+
+        /**********************************************************
+                        Set connection to backend
+        **********************************************************/
+        var url = '../api/Operations'
+        var db = {
+            loadData: function (filter) {
+                return $.ajax({
+                    type: "GET",
+                    url: url,
+                    data: filter,
+                    dataType: "json"
+                });
+            },
+            updateItem: function (item) {
+                return $.ajax({
+                    type: "PUT",
+                    url: url + "/" + item.Id,
+                    data: item,
+                    dataType: "json",
+                    success: function () {
+                        toastr.success("L'opération a correctement été modifiée.");
+                    },
+                    error: function (xhr, status, err) {
+                        toastr.error("Erreur, l'opération n'a pas été modifiée. Cause : " + err);
+                    }
+                });
+            },
+            insertItem: function (item) {
+                return $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: item,
+                    dataType: "json",
+                    success: function () {
+                        toastr.success("L'opération a correctement été ajoutée.");
+                    },
+                    error: function (xhr, status, err) {
+                        toastr.error("Erreur, l'opération n'a pas été ajoutée. Cause : " + err);
+                    }
+                });
+            },
+            deleteItem: function (item) {
+                return $.ajax({
+                    type: "DELETE",
+                    url: url + "/" + item.Id,
+                    data: item.LocationId,
+                    dataType: "json",
+                    success: function () {
+                        toastr.success("L'opération a correctement été supprimée.");
+                    },
+                    error: function (xhr, status, err) {
+                        toastr.error("Erreur, l'opération n'a pas été supprimée. Cause : " + err);
+                    }
+                });
+            },
+        }
+
+        /**********************************************************
+                                Load jsGrid
+        **********************************************************/
+        $("#jsGrid").jsGrid({
+            height: 'auto',
+            width: '100%',
+
+            inserting: true,
+            filtering: true,
+            editing: true,
+            sorting: true,
+            paging: true,
+            autoload: true,
+
+            pageSize: 15,
+            pageButtonCount: 5,
+
+            deleteConfirm: "Êtes-vous sûr de vouloir supprimer cette opération?",
+
+            controller: db,
+            fields: [
+                {
+                    name: "Icon",
+                    title: "Icône",
+                    type: 'iconPickerField',
+                    filtering: false,
+                    width: 10,
+                    align: "center",
+                },
+                {
+                    name: 'Name',
+                    title: "Nom",
+                    type: 'text',
+                    filtering: true,
+                    validate: { message: "Le nom est requis", validator: "required" },
+                },
+                {
+                    type: "control",
+                    width: 35,
+                }
+            ]
+        });
+    </script>
+
+</body>
+</html>

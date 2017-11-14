@@ -1,0 +1,59 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+
+/* IMPORTANT FOR DRAG AND DROP */
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
+}
+
+ol.budget-box {
+    min-height: 10px;
+    width: 50%;
+    padding: 0;
+}
+ol.budget-box li {
+    display: block;
+    margin: 5px;
+    padding: 5px;
+}
+ol.budget-box li.placeholder {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+ol.budget-box li.placeholder:before {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    margin-top: -0px;
+    left: -5px;
+    top: 6px;
+    border: 8px solid transparent;
+    border-left-color: #343a40;
+    border-right: none;
+}
+/* END IMPORTANT FOR DRAG AND DROP */

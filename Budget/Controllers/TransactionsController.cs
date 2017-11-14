@@ -17,8 +17,8 @@ namespace Budget.Controllers
     {
         private BudgetContext db = new BudgetContext();
 
-        [Route("api/Transactions/GetOperationBloc/{date}")]
-        public IQueryable<OperationDTO> GetOperationBloc(DateTime date)
+        [Route("api/Transactions/GetTransactionBloc/{date}")]
+        public IQueryable<TransactionDTO> GetTransactionBloc(DateTime date)
         {
             return db.Recurrences
                 .Join(db.Transactions, re => re.TransactionId, tr => tr.Id, (re, tr) => new { Tr = tr, Re = re })
@@ -27,46 +27,44 @@ namespace Budget.Controllers
                 .Where(x => x.ReTr.Tr.AcccountId == db.account)
                 .Where(x => x.ReTr.Re.Month == date.Month)
                 .Where(x => x.ReTr.Re.Year == date.Year)
-                // .Where(x => x.ReTr.Tr.Type.Id == (int)TransactionType.TypeValues.BudgetDebit)
                 .Include(x => x.ReTr.Tr.Operation)
                 .Include(x => x.ReTr.Tr.Type)
-                .Select(x => new OperationDTO
+                .Select(x => new TransactionDTO
                 {
-                    Id = x.ReTr.Tr.Id,
-                    Name = x.Op.Name,
-                    Icon = x.Op.Icon,
-                    Amount = x.ReTr.Tr.Amount,
-                    Type = x.ReTr.Tr.TypeId,
-                    Remark = x.ReTr.Tr.Remark
+                    TransactionId = x.ReTr.Tr.Id,
+                    OperationId = x.Op.Id,
+                    OperationName = x.Op.Name,
+                    OperationIcon = x.Op.Icon,
+                    TransactionAmount = x.ReTr.Tr.Amount,
+                    TransactionType = x.ReTr.Tr.TypeId,
+                    TransactionRemark = x.ReTr.Tr.Remark
                 });
         }
 
-        // GET: api/Transactions
-        public IQueryable<OperationDTO> GetTransactions()
+        [Route("api/Transactions/GetDebitByOperation/{date}")]
+        public IQueryable<TransactionDTO> GetDebitByOperation(DateTime date)
         {
-            DateTime date = DateTime.Now.AddYears(-7);
-            var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
-            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-
-            return db.Transactions
-                .Join(db.Operations, tr => tr.OperationId, op => op.Id, (tr, op) => new { Transaction = tr, Operation = op })
-                .Where(x => x.Transaction.AcccountId == db.account)
-                .Where(x => x.Transaction.Login == db.user)
-                .Where(x => x.Transaction.Date >= firstDayOfMonth && x.Transaction.Date <= lastDayOfMonth)
-                .Include(x => x.Transaction.Operation)
+            return db.Recurrences
+                .Join(db.Transactions, re => re.TransactionId, tr => tr.Id, (re, tr) => new { Tr = tr, Re = re })
+                .Join(db.Operations, retr => retr.Tr.OperationId, op => op.Id, (retr, op) => new { ReTr = retr, Op = op })
+                .Where(x => x.ReTr.Tr.Login == db.user)
+                .Where(x => x.ReTr.Tr.AcccountId == db.account)
+                .Where(x => x.ReTr.Re.Month == date.Month)
+                .Where(x => x.ReTr.Re.Year == date.Year)
+                .Where(x => x.ReTr.Tr.Type.Id == (int)TransactionType.TypeValues.Debit)
+                .Include(x => x.ReTr.Tr.Operation)
+                .Include(x => x.ReTr.Tr.Type)
                 .GroupBy(x => new
                 {
-                    x.Operation.Id,
-                    x.Operation.Name,
-                    x.Operation.Icon,
+                    x.Op.Id,
+                    x.Op.Name,
                 }
                 )
-                .Select(x => new OperationDTO
+                .Select(x => new TransactionDTO
                 {
-                    Id = x.Key.Id,
-                    Name = x.Key.Name,
-                    Icon = x.Key.Icon,
-                    Amount = x.Sum(s => s.Transaction.Amount)
+                    OperationId = x.Key.Id,
+                    OperationName = x.Key.Name,
+                    TransactionAmount = x.Sum(s => s.ReTr.Tr.Amount)
                 });
         }
 
@@ -164,3 +162,4 @@ namespace Budget.Controllers
         }
     }
 }
+ 

@@ -4,30 +4,30 @@
     <title>Liste des transactions</title>
 </head>
 <body>
-    <ol class="budget-box" ng-controller="TransactionCtrl" ng-init="getOperationBloc()">
-        <li ng-repeat="operationBloc in operationBlocArray | filter: {Type: 3 }">
+    <ol class="budget-box" ng-controller="TransactionCtrl" ng-init="getTransactionBloc()">
+        <li ng-repeat="transactionBloc in transactionBlocArray | filter: {TransactionType: 3 }">
             <div class="card text-white bg-primary o-hidden h-100">
                 <div class="card-body">
                     <div class="card-body-icon">
-                        <i class="fa fa-fw {{operationBloc.Icon}} move"></i>
+                        <i class="fa fa-fw {{transactionBloc.OperationIcon}} move"></i>
                     </div>
                     <div class="mr-5">
-                        <div>{{operationBloc.Name}}</div>
-                        <div>{{operationBloc.Amount | currency:"CHF "}}</div>
+                        <div>{{transactionBloc.OperationName}}</div>
+                        <div>Budget : {{transactionBloc.TransactionAmount | currency:"CHF "}}</div>
                     </div>
                 </div>
-                <a class="card-footer text-white clearfix small z-1" data-toggle="collapse" href="#collapseTransaction{{operationBloc.Id}}" aria-expanded="false" aria-controls="collapseTransaction>
-                    <span class="float-left">Détails...</span>
+                <a class="card-footer text-white clearfix small z-1" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction>
+                    <span class="float-left">Détails &nbsp; <i class="fa fa-angle-right"></i></span>
                     <span class="float-right">
-                        <i class="fa fa-angle-right"></i>
+                        Total des dépenses : {{(debitByOperationArray | filter : {OperationId: transactionBloc.OperationId})[0].TransactionAmount | currency:"CHF "}}
                     </span>
                 </a>
-                <div class="collapse" id="collapseTransaction{{operationBloc.Id}}">
+                <div class="collapse" id="collapseTransaction{{transactionBloc.OperationId}}">
                     <div class="card card-block">
                         <table class="transactionTable">
-                            <tr ng-repeat="transaction in operationBlocArray | filter: {Type: 1 } | filter: {Name: operationBloc.Name }">
-                                <td>{{transaction.Remark}}</td>
-                                <td width="100px">{{transaction.Amount | currency:"CHF "}}</td>
+                            <tr ng-repeat="transaction in transactionBlocArray | filter: {TransactionType: 1 } | filter: {OperationId: transactionBloc.OperationId }">
+                                <td>{{transaction.TransactionRemark}}</td>
+                                <td width="100px">{{transaction.TransactionAmount | currency:"CHF "}}</td>
                             </tr>
                         </table>
                     </div>

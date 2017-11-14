@@ -13,6 +13,8 @@ namespace Budget
         public int Id { get; set; }
         public string Name { get; set; }
         public string Icon { get; set; }
-        public float Total { get; set; }
+        public float Amount { get; set; }
+        public int Type { get; set; }
+        public string Remark { get; set; }
     }
 }

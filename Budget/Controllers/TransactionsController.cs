@@ -17,33 +17,27 @@ namespace Budget.Controllers
     {
         private BudgetContext db = new BudgetContext();
 
-        [Route("api/Transactions/GetOperationBloc")]
-        public IQueryable<OperationDTO> GetOperationBloc()
+        [Route("api/Transactions/GetOperationBloc/{date}")]
+        public IQueryable<OperationDTO> GetOperationBloc(DateTime date)
         {
-            DateTime date = DateTime.Now.AddYears(-7);
-            var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
-            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-
             return db.Recurrences
-                .Join(db.Transactions, re => re.TransactionId, tr => tr.Id, (re, tr) => new { Transaction = tr, Recurrence = re })
-                .Join(db.Operations, retr => retr.Transaction.OperationId, op => op.Id, (retr, op) => new { Transaction = retr.Transaction, Operation = op })
-                .Where(x => x. Transaction.AcccountId == db.account)
-                .Where(x => x.Transaction.Login == db.user)
-                .Where(x => x.Transaction.Date >= firstDayOfMonth && x.Transaction.Date <= lastDayOfMonth)
-                .Include(x => x.Transaction.Operation)
-                .GroupBy(x => new
-                {
-                    x.Operation.Id,
-                    x.Operation.Name,
-                    x.Operation.Icon,
-                }
-                )
+                .Join(db.Transactions, re => re.TransactionId, tr => tr.Id, (re, tr) => new { Tr = tr, Re = re })
+                .Join(db.Operations, retr => retr.Tr.OperationId, op => op.Id, (retr, op) => new { ReTr = retr, Op = op })
+                .Where(x => x.ReTr.Tr.Login == db.user)
+                .Where(x => x.ReTr.Tr.AcccountId == db.account)
+                .Where(x => x.ReTr.Re.Month == date.Month)
+                .Where(x => x.ReTr.Re.Year == date.Year)
+                // .Where(x => x.ReTr.Tr.Type.Id == (int)TransactionType.TypeValues.BudgetDebit)
+                .Include(x => x.ReTr.Tr.Operation)
+                .Include(x => x.ReTr.Tr.Type)
                 .Select(x => new OperationDTO
                 {
-                    Id = x.Key.Id,
-                    Name = x.Key.Name,
-                    Icon = x.Key.Icon,
-                    Total = x.Sum(s => s.Transaction.Amount)
+                    Id = x.ReTr.Tr.Id,
+                    Name = x.Op.Name,
+                    Icon = x.Op.Icon,
+                    Amount = x.ReTr.Tr.Amount,
+                    Type = x.ReTr.Tr.TypeId,
+                    Remark = x.ReTr.Tr.Remark
                 });
         }
 
@@ -72,7 +66,7 @@ namespace Budget.Controllers
                     Id = x.Key.Id,
                     Name = x.Key.Name,
                     Icon = x.Key.Icon,
-                    Total = x.Sum(s => s.Transaction.Amount)
+                    Amount = x.Sum(s => s.Transaction.Amount)
                 });
         }
 

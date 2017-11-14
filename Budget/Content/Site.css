@@ -56,4 +56,12 @@ ol.budget-box li.placeholder:before {
     border-left-color: #343a40;
     border-right: none;
 }
+
+table.transactionTable {
+    color: #343a40;
+    width: 100%;
+    font-size: smaller;
+    padding: 2px;
+    vertical-align: top;
+}
 /* END IMPORTANT FOR DRAG AND DROP */

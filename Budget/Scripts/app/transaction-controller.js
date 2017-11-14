@@ -7,7 +7,7 @@
             // Simple GET request example:
             $http({
                 method: 'GET',
-                url: '/api/Transactions/GetOperationBloc'
+                url: '/api/Transactions/GetOperationBloc/2010-11-01'
             }).then(function successCallback(response) {
                 $scope.operationBlocArray = response.data;
                 console.log($scope.operationBlocArray);

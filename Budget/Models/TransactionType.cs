@@ -17,5 +17,13 @@ namespace Budget
 
         [Column("TY_NAME")]
         public string Name { get; set; }
+
+        public enum TypeValues
+        {
+            Debit = 1,
+            Credit = 2,
+            BudgetDebit = 3,
+            BudgetCredit = 4,
+        }
     }
 }

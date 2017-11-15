@@ -56,6 +56,11 @@ ol.budget-box li.placeholder:before {
     border-left-color: #343a40;
     border-right: none;
 }
+/* END IMPORTANT FOR DRAG AND DROP */
+
+.operation-bloc {
+    background-image: linear-gradient(#007bff, #2a77cc);
+}
 
 table.transactionTable {
     color: #343a40;
@@ -64,4 +69,41 @@ table.transactionTable {
     padding: 2px;
     vertical-align: top;
 }
-/* END IMPORTANT FOR DRAG AND DROP */
+
+.negativ {
+    color: red;
+    font-weight: bold;
+}
+
+.negativ:before {
+    font-family: FontAwesome;
+    content: "\f12a";
+    font-weight: bold;
+}
+
+.positiv {
+    color: green;
+}
+
+.positiv:before {
+    font-family: FontAwesome;
+    content: "\f00c";
+}
+
+.solde {
+    border-radius: 2rem !important;
+    padding: 10px 10px 10px 10px;
+    background: #68b0ff;
+    margin-right: 30px;
+    text-align: right;
+}
+
+.operation-title {
+    font-size: larger;
+    font-weight: bold;
+}
+
+.operation-budget {
+    font-weight: normal;
+}
+

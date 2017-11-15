@@ -16,31 +16,24 @@ myApp.controller('TransactionCtrl', function ($scope, $http) {
             for (var i = 0; i < $scope.transactionBlocArray.length; i++) {
                 if ($scope.transactionBlocArray[i].TransactionType == 3)
                 {
-                    var toto = getOperationTotal($scope.transactionBlocArray, $scope.transactionBlocArray[i].OperationId);
-                    $scope.transactionBlocArray[i].OperationTotal = toto
-
+                    var operationTotal = getOperationTotal($scope.transactionBlocArray, $scope.transactionBlocArray[i].OperationId);
+                    $scope.transactionBlocArray[i].OperationTotal = operationTotal
+                    $scope.transactionBlocArray[i].Solde = $scope.transactionBlocArray[i].TransactionAmount - operationTotal;
                 }
             }
 
-            console.log($scope.transactionBlocArray);
         }, function errorCallback(response) {
             console.log(response);
-        });
-
-        // Simple GET request example:
-        $http({
-            method: 'GET',
-            url: '/api/Transactions/GetDebitByOperation/2010-11-01'
-        }).then(function successCallback(response) {
-            $scope.debitByOperationArray = response.data;
-            // console.log($scope.debitByOperationArray);
-        }, function errorCallback(response) {
-            console.log(response);
-        });
-            
+        });            
     };
 
     function getOperationTotal(array, operationId) {
-        return 400;
+        var total = 0;
+        for (var i = 0; i < array.length; i++) {
+            if (array[i].TransactionType == 1 && array[i].OperationId == operationId) {
+                total += array[i].TransactionAmount;
+            }
+        }
+        return total;
     }
 });

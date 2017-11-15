@@ -6,20 +6,26 @@
 <body>
     <ol class="budget-box" ng-controller="TransactionCtrl" ng-init="getTransactionBloc()">
         <li ng-repeat="transactionBloc in transactionBlocArray | filter: {TransactionType: 3 }">
-            <div class="card text-white bg-primary o-hidden h-100">
+            <div class="card text-white operation-bloc o-hidden h-100">
                 <div class="card-body">
                     <div class="card-body-icon">
                         <i class="fa fa-fw {{transactionBloc.OperationIcon}} move"></i>
                     </div>
                     <div class="mr-5">
-                        <div>{{transactionBloc.OperationName}}</div>
-                        <div>Budget : {{transactionBloc.TransactionAmount | currency:"CHF "}}</div>
+                        <span class="float-left">
+                            <div class="operation-title">{{transactionBloc.OperationName}}</div>
+                            <div class="operation-budget"><img src="~/Content/Images/budget.png"/> {{transactionBloc.TransactionAmount | currency:"CHF "}}</div>
+                        </span>
+
+                        <span class="float-right solde" ng-class="{negativ: (transactionBloc.Solde < 0), positiv: (transactionBloc.Solde >= 0)}">
+                            {{transactionBloc.Solde | currency:"CHF "}}
+                        </span>
                     </div>
                 </div>
                 <a class="card-footer text-white clearfix small z-1" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction>
                     <span class="float-left">Détails &nbsp; <i class="fa fa-angle-right"></i></span>
                     <span class="float-right">
-                        Total des dépenses : {{(debitByOperationArray | filter : {OperationId: transactionBloc.OperationId})[0].TransactionAmount | currency:"CHF "}}
+                        Total des dépenses : {{transactionBloc.OperationTotal | currency:"CHF "}}
                     </span>
                 </a>
                 <div class="collapse" id="collapseTransaction{{transactionBloc.OperationId}}">

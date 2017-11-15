@@ -16,6 +16,7 @@ namespace Budget
         public string OperationIcon { get; set; }
         public float TransactionAmount { get; set; }
         public int TransactionType { get; set; }
+        public DateTime TransactionDate { get; set; }
         public string TransactionRemark { get; set; }
     }
 }

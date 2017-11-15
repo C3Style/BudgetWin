@@ -12,7 +12,8 @@ namespace Budget
                         "~/Scripts/jquery-2.1.1.js",
                         "~/Scripts/jquery.dataTables.js",
                         "~/Scripts/jquery-ui/jquery-ui.js",
-                        "~/Scripts/angular.min.js"
+                        "~/Scripts/angular.min.js",
+                        "~/Scripts/angular-mocks.js"
                         ));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
@@ -30,6 +31,7 @@ namespace Budget
                       "~/Scripts/jsgrid/i18n/jsgrid-fr.js",
                       "~/Scripts/simple-iconpicker.js",
                       "~/Scripts/jquery-sortable.js",
+                      "~/Scripts/xeditable/xeditable.js",
                       "~/Scripts/app/transaction-controller.js"
                       // "~/Scripts/sb/sb-admin-charts.min.js"
                       ));
@@ -46,6 +48,7 @@ namespace Budget
                       "~/Content/jsgrid/jsgrid-theme.css",
                       "~/Content/sb/sb-admin.css",
                       "~/Content/simple-iconpicker.css",
+                      "~/Content/xeditable/xeditable.css",
                       "~/Content/site.css"
                       ));
 

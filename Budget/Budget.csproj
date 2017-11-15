@@ -258,6 +258,8 @@
     <Content Include="Content\simple-iconpicker.css" />
     <Content Include="Content\simple-iconpicker.min.css" />
     <Content Include="Content\toastr.min.css" />
+    <Content Include="Content\xeditable\xeditable.css" />
+    <Content Include="Content\xeditable\xeditable.min.css" />
     <Content Include="Database\update_script_2.0.sql" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
@@ -334,6 +336,8 @@
     <Content Include="Scripts\simple-iconpicker.js" />
     <Content Include="Scripts\simple-iconpicker.min.js" />
     <Content Include="Scripts\toastr.min.js" />
+    <Content Include="Scripts\xeditable\xeditable.js" />
+    <Content Include="Scripts\xeditable\xeditable.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

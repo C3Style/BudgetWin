@@ -22,18 +22,46 @@
                         </span>
                     </div>
                 </div>
-                <a class="card-footer text-white clearfix small z-1" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction>
-                    <span class="float-left">Détails &nbsp; <i class="fa fa-angle-right"></i></span>
+                <a class="card-footer text-white clearfix z-1" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction>
+                    <span class="float-left">Détails <i class="fa fa-angle-right"></i></span>
                     <span class="float-right">
-                        Total des dépenses : {{transactionBloc.OperationTotal | currency:"CHF "}}
+                        <i class="fa fa-1x fa-credit-card"></i> {{transactionBloc.OperationTotal | currency:"CHF "}}
                     </span>
                 </a>
                 <div class="collapse" id="collapseTransaction{{transactionBloc.OperationId}}">
                     <div class="card card-block">
-                        <table class="transactionTable">
+                        <table class="table table-bordered table-hover table-condensed transactionTable">
                             <tr ng-repeat="transaction in transactionBlocArray | filter: {TransactionType: 1 } | filter: {OperationId: transactionBloc.OperationId }">
+                                <td>
+                                    <span editable-text="transaction.TransactionDate" e-name="TransactionDate" e-form="rowform" e-required>
+                                        {{transaction.TransactionDate}}
+                                    </span>
+                                </td>
+                                <td style="white-space: nowrap">
+                                    <!-- form -->
+                                    <form editable-form name="rowform" onbeforesave="saveUser($data, user.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == user">
+                                        <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+                                            save
+                                        </button>
+                                        <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+                                            cancel
+                                        </button>
+                                    </form>
+                                    <div class="buttons" ng-show="!rowform.$visible">
+                                        <button type="button" class="btn btn-primary" ng-click="rowform.$show()">edit</button>
+                                        <button type="button" class="btn btn-danger" ng-click="removeUser($index)">del</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <button type="button" class="btn btn-default" ng-click="addUser()">Add row</button>
+
+
+                        <table >
+                            <tr >
                                 <td>{{transaction.TransactionRemark}}</td>
-                                <td width="100px">{{transaction.TransactionAmount | currency:"CHF "}}</td>
+                                <td >{{transaction.TransactionAmount | currency:"CHF "}}</td>
                             </tr>
                         </table>
                     </div>

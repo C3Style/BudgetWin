@@ -37,6 +37,7 @@ namespace Budget.Controllers
                     OperationIcon = x.Op.Icon,
                     TransactionAmount = x.ReTr.Tr.Amount,
                     TransactionType = x.ReTr.Tr.TypeId,
+                    TransactionDate = x.ReTr.Tr.Date,
                     TransactionRemark = x.ReTr.Tr.Remark
                 });
         }

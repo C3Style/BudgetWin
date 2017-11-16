@@ -70,6 +70,10 @@ table.transactionTable {
     vertical-align: top;
 }
 
+table.transactionTable td {
+    padding: 0.5rem;
+}
+
 .negativ {
     color: #e00014;
     background-color: white;
@@ -109,3 +113,6 @@ table.transactionTable {
     font-weight: normal;
 }
 
+i.transaction-icon {
+    cursor: pointer;
+}

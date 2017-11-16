@@ -13,7 +13,8 @@ namespace Budget
                         "~/Scripts/jquery.dataTables.js",
                         "~/Scripts/jquery-ui/jquery-ui.js",
                         "~/Scripts/angular.min.js",
-                        "~/Scripts/angular-mocks.js"
+                        "~/Scripts/angular-mocks.js",
+                        "~/Scripts/angular-ui-bootstrap.js"
                         ));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(

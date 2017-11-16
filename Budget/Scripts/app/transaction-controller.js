@@ -1,4 +1,8 @@
-﻿var budgetApp = angular.module('BudgetApp', ["xeditable"]);
+﻿var budgetApp = angular.module('BudgetApp', ["xeditable", "ui.bootstrap"]);
+
+budgetApp.run(function (editableOptions) {
+    // editableOptions.theme = 'bs3';
+});
 
 budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http) {
 
@@ -14,6 +18,10 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http) {
             $scope.transactionBlocArray = response.data;
 
             for (var i = 0; i < $scope.transactionBlocArray.length; i++) {
+
+                var date = new Date($scope.transactionBlocArray[i].TransactionDate);
+                $scope.transactionBlocArray[i].DateFormatted = date;
+
                 if ($scope.transactionBlocArray[i].TransactionType == 3)
                 {
                     var operationTotal = getOperationTotal($scope.transactionBlocArray, $scope.transactionBlocArray[i].OperationId);
@@ -37,53 +45,12 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http) {
         return total;
     }
 
-    $scope.users = [
-        { id: 1, name: 'awesome user1', status: 2, group: 4, groupName: 'admin' },
-        { id: 2, name: 'awesome user2', status: undefined, group: 3, groupName: 'vip' },
-        { id: 3, name: 'awesome user3', status: 2, group: null }
-    ];
-
-    $scope.statuses = [
-        { value: 1, text: 'status1' },
-        { value: 2, text: 'status2' },
-        { value: 3, text: 'status3' },
-        { value: 4, text: 'status4' }
-    ];
-
-    $scope.groups = [];
-    $scope.loadGroups = function () {
-        return $scope.groups.length ? null : $http.get('/groups').success(function (data) {
-            $scope.groups = data;
-        });
-    };
-
-    $scope.showGroup = function (user) {
-        if (user.group && $scope.groups.length) {
-            var selected = $filter('filter')($scope.groups, { id: user.group });
-            return selected.length ? selected[0].text : 'Not set';
-        } else {
-            return user.groupName || 'Not set';
-        }
-    };
-
-    $scope.showStatus = function (user) {
-        var selected = [];
-        if (user.status) {
-            selected = $filter('filter')($scope.statuses, { value: user.status });
-        }
-        return selected.length ? selected[0].text : 'Not set';
-    };
-
-    $scope.checkName = function (data, id) {
-        if (id === 2 && data !== 'awesome') {
-            return "Username 2 should be `awesome`";
-        }
-    };
-
     $scope.saveUser = function (data, id) {
         //$scope.user not updated yet
         angular.extend(data, { id: id });
-        return $http.post('/saveUser', data);
+        console.log(data);
+        return true;
+        // return $http.post('/saveUser', data);
     };
 
     // remove user
@@ -91,10 +58,24 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http) {
         $scope.users.splice(index, 1);
     };
 
+    $scope.user = {
+        dob: new Date(1984, 4, 15)
+    };
+
+    $scope.opened = {};
+
+    $scope.open = function ($event, elementOpened) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.opened[elementOpened] = !$scope.opened[elementOpened];
+    };
+
+
     // add user
     $scope.addUser = function () {
         $scope.inserted = {
-            id: $scope.users.length + 1,
+            identi: null,
             name: '',
             status: null,
             group: null

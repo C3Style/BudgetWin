@@ -4,114 +4,171 @@
     <title>Liste des transactions</title>
 </head>
 <body>
-    <ol class="budget-box" ng-controller="TransactionCtrl" ng-init="getTransactionBloc()">
-        <li ng-repeat="transactionBloc in transactionBlocArray | filter: {TransactionType: 3 }">
-            <div class="card text-white operation-bloc o-hidden h-100">
-                <div class="card-body">
-                    <div class="card-body-icon">
-                        <i class="fa fa-fw {{transactionBloc.OperationIcon}} move"></i>
-                    </div>
-                    <div class="mr-5">
-                        <span class="float-left">
-                            <div class="operation-title">{{transactionBloc.OperationName}}</div>
-                            <div class="operation-budget"><img src="~/Content/Images/budget.png"/> {{transactionBloc.TransactionAmount | currency:"CHF "}}</div>
-                        </span>
+    <div class="row budget-box" ng-controller="TransactionCtrl" ng-init="getTransactionBloc()">
+        <section class="connectedSortable">
+            <div class="budget-box-div" ng-repeat="transactionBloc in transactionBlocArray | filter: {TransactionType: 3 }">
+                <div class="box box-solid">
+                    <div class="box-header">
+                        <!-- small box -->
+                        <div class="small-box bg-blue">
+                            <div class="inner">
+                                <span class="float-left">
+                                    <div class="operation-title">{{transactionBloc.OperationName}}</div>
+                                    <div class="operation-budget"><img src="~/Content/Images/budget.png" /> {{transactionBloc.TransactionAmount | currency:"CHF "}}</div>
+                                </span>
+                                <span class="float-right solde" ng-class="{negativ: (transactionBloc.Solde < 0), positiv: (transactionBloc.Solde >= 0)}">
+                                    {{transactionBloc.Solde | currency:"CHF "}}
+                                </span>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-fw {{transactionBloc.OperationIcon}} operation-icon"></i>
+                            </div>
+                            <a class="small-box-footer" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction">
+                                <span class="float-left">Détails <i class="fa fa-angle-right"></i></span>
+                                <span class="float-right">
+                                    <i class="fa fa-1x fa-credit-card"></i> {{transactionBloc.OperationTotal | currency:"CHF "}}
+                                </span>
+                            </a>
+                            <div class="collapse" id="collapseTransaction{{transactionBloc.OperationId}}">
+                                <div class="card card-block">
+                                    <table class="table table-bordered table-hover table-condensed transactionTable">
+                                        <tr ng-repeat="transaction in transactionBlocArray | filter: {TransactionType: 1 } | filter: {OperationId: transactionBloc.OperationId }">
+                                            <td style="white-space: nowrap; width: 70px;">
+                                                <span editable-date="transaction.DateFormatted" e-name="DateFormatted" e-form="rowform" e-style="width:70px;" e-required>
+                                                    {{ transaction.DateFormatted | date:"dd/MM/yyyy" }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span editable-textarea="transaction.TransactionRemark" e-name="TransactionRemark" e-form="rowform" e-required>
+                                                    {{ transaction.TransactionRemark }}
+                                                </span>
+                                            </td>
+                                            <td style="white-space: nowrap; width: 100px;">
+                                                <span editable-text="transaction.TransactionAmount" e-name="TransactionAmount" e-form="rowform" e-style="width:100px; text-align: right;" e-required>
+                                                    {{ transaction.TransactionAmount | currency:"CHF "}}
+                                                </span>
+                                            </td>
+                                            <td style="white-space: nowrap; width: 80px;">
+                                                <form editable-form name="rowform" onbeforesave="saveUser($data, user.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == transaction">
+                                                    <button type="submit" style="border:none; background-color: transparent;">
+                                                        <i class="fa fa-2x fa-floppy-o transaction-icon" ng-disabled="rowform.$waiting"></i>
+                                                    </button>
+                                                    <i class="fa fa-2x fa-ban transaction-icon" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"></i>
+                                                </form>
+                                                <div class="buttons" ng-show="!rowform.$visible">
+                                                    <i class="fa fa-2x fa-pencil-square-o transaction-icon" ng-click="rowform.$show()"></i>
+                                                    <i class="fa fa-2x fa-trash-o transaction-icon" ng-click="removeUser($index)"></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <button type="button" class="btn btn-default" ng-click="addUser()">Add row</button>
+                                </div>
+                            </div>
 
-                        <span class="float-right solde" ng-class="{negativ: (transactionBloc.Solde < 0), positiv: (transactionBloc.Solde >= 0)}">
-                            {{transactionBloc.Solde | currency:"CHF "}}
-                        </span>
-                    </div>
-                </div>
-                <a class="card-footer text-white clearfix z-1" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction">
-                    <span class="float-left">Détails <i class="fa fa-angle-right"></i></span>
-                    <span class="float-right">
-                        <i class="fa fa-1x fa-credit-card"></i> {{transactionBloc.OperationTotal | currency:"CHF "}}
-                    </span>
-                </a>
-                <a href="#" editable-bsdate="user.dob" e-is-open="opened.$data" e-ng-click="open($event,'$data')" e-datepicker-popup="dd-MMMM-yyyy">
-                    {{ (user.dob | date:"dd/MM/yyyy") || 'empty' }}
-                </a>
-                <div class="collapse" id="collapseTransaction{{transactionBloc.OperationId}}">
-                    <div class="card card-block">
-                        <table class="table table-bordered table-hover table-condensed transactionTable">
-                            <tr ng-repeat="transaction in transactionBlocArray | filter: {TransactionType: 1 } | filter: {OperationId: transactionBloc.OperationId }">
-                                <td style="white-space: nowrap; width: 70px;">
-                                    <span editable-date="transaction.DateFormatted" e-name="DateFormatted" e-form="rowform" e-style="width:70px;" e-required >
-                                        {{ transaction.DateFormatted | date:"dd/MM/yyyy" }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span editable-textarea="transaction.TransactionRemark" e-name="TransactionRemark" e-form="rowform" e-required>
-                                        {{ transaction.TransactionRemark }}
-                                    </span>
-                                </td>
-                                <td style="white-space: nowrap; width: 100px;">
-                                    <span editable-text="transaction.TransactionAmount" e-name="TransactionAmount" e-form="rowform" e-style="width:100px; text-align: right;" e-required>
-                                        {{ transaction.TransactionAmount | currency:"CHF "}}
-                                    </span>
-                                </td>
-                                <td style="white-space: nowrap; width: 80px;">
-                                    <!-- form -->
-                                    <form editable-form name="rowform" onbeforesave="saveUser($data, user.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == transaction">
-                                        <button type="submit" style="border:none; background-color: transparent;">
-                                            <i class="fa fa-2x fa-floppy-o transaction-icon" ng-disabled="rowform.$waiting"></i>
-                                        </button>                  
-                                        <i class="fa fa-2x fa-ban transaction-icon" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"></i>
-                                    </form>
-                                    <div class="buttons" ng-show="!rowform.$visible">
-                                        <i class="fa fa-2x fa-pencil-square-o transaction-icon" ng-click="rowform.$show()"></i>
-                                        <i class="fa fa-2x fa-trash-o transaction-icon" ng-click="removeUser($index)"></i>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                        <button type="button" class="btn btn-default" ng-click="addUser()">Add row</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </li>
-    </ol>   
-    <script>
-        $(function () {
-            var adjustment;
+        </section>
+    </div>
 
-            $("ol.budget-box").sortable({
-                group: 'no-drop',
-                handle: 'i.move',
-                placeholderClass: "placeholder",
-                placeholder: '<li class="placeholder">&nbsp;</li>',
-                // animation on drop
-                onDrop: function ($item, container, _super) {
-                    var $clonedItem = $('<li/>').css({ height: 0 });
-                    $item.before($clonedItem);
-                    $clonedItem.animate({ 'height': $item.height() });
+    
+        <!--
+        <div class="card text-white operation-bloc o-hidden h-100">
+            <div class="card-body">
+                <div class="card-body-icon">
+                    <i class="fa fa-fw  move"></i>
+                </div>
+                <div class="mr-5">
 
-                    $item.animate($clonedItem.position(), function () {
-                        $clonedItem.detach();
+                </div>
+            </div>
+            <a class="card-footer text-white clearfix z-1" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction">
+                <span class="float-left">Détails <i class="fa fa-angle-right"></i></span>
+                <span class="float-right">
+                    <i class="fa fa-1x fa-credit-card"></i> {{transactionBloc.OperationTotal | currency:"CHF "}}
+                </span>
+            </a>
+            <div class="collapse" id="collapseTransaction{{transactionBloc.OperationId}}">
+                <div class="card card-block">
+                    <table class="table table-bordered table-hover table-condensed transactionTable">
+                        <tr ng-repeat="transaction in transactionBlocArray | filter: {TransactionType: 1 } | filter: {OperationId: transactionBloc.OperationId }">
+                            <td style="white-space: nowrap; width: 70px;">
+                                <span editable-date="transaction.DateFormatted" e-name="DateFormatted" e-form="rowform" e-style="width:70px;" e-required >
+                                    {{ transaction.DateFormatted | date:"dd/MM/yyyy" }}
+                                </span>
+                            </td>
+                            <td>
+                                <span editable-textarea="transaction.TransactionRemark" e-name="TransactionRemark" e-form="rowform" e-required>
+                                    {{ transaction.TransactionRemark }}
+                                </span>
+                            </td>
+                            <td style="white-space: nowrap; width: 100px;">
+                                <span editable-text="transaction.TransactionAmount" e-name="TransactionAmount" e-form="rowform" e-style="width:100px; text-align: right;" e-required>
+                                    {{ transaction.TransactionAmount | currency:"CHF "}}
+                                </span>
+                            </td>
+                            <td style="white-space: nowrap; width: 80px;">
+                                <form editable-form name="rowform" onbeforesave="saveUser($data, user.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == transaction">
+                                    <button type="submit" style="border:none; background-color: transparent;">
+                                        <i class="fa fa-2x fa-floppy-o transaction-icon" ng-disabled="rowform.$waiting"></i>
+                                    </button>
+                                    <i class="fa fa-2x fa-ban transaction-icon" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"></i>
+                                </form>
+                                <div class="buttons" ng-show="!rowform.$visible">
+                                    <i class="fa fa-2x fa-pencil-square-o transaction-icon" ng-click="rowform.$show()"></i>
+                                    <i class="fa fa-2x fa-trash-o transaction-icon" ng-click="removeUser($index)"></i>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <button type="button" class="btn btn-default" ng-click="addUser()">Add row</button>
+                </div>
+            </div>
+        </div>-->
+
+        <script>
+            $(function () {
+                var adjustment;
+
+                $("ol.budget-box").sortable({
+                    group: 'no-drop',
+                    handle: 'i.move',
+                    placeholderClass: "placeholder",
+                    placeholder: '<li class="placeholder">&nbsp;</li>',
+                    // animation on drop
+                    onDrop: function ($item, container, _super) {
+                        var $clonedItem = $('<li/>').css({ height: 0 });
+                        $item.before($clonedItem);
+                        $clonedItem.animate({ 'height': $item.height() });
+
+                        $item.animate($clonedItem.position(), function () {
+                            $clonedItem.detach();
+                            _super($item, container);
+                        });
+                    },
+
+                    // set $item relative to cursor position
+                    onDragStart: function ($item, container, _super) {
+                        var offset = $item.offset(),
+                            pointer = container.rootGroup.pointer;
+
+                        adjustment = {
+                            left: pointer.left - offset.left,
+                            top: pointer.top - offset.top
+                        };
+
                         _super($item, container);
-                    });
-                },
-
-                // set $item relative to cursor position
-                onDragStart: function ($item, container, _super) {
-                    var offset = $item.offset(),
-                        pointer = container.rootGroup.pointer;
-
-                    adjustment = {
-                        left: pointer.left - offset.left,
-                        top: pointer.top - offset.top
-                    };
-
-                    _super($item, container);
-                },
-                onDrag: function ($item, position) {
-                    $item.css({
-                        left: position.left - adjustment.left,
-                        top: position.top - adjustment.top
-                    });
-                }
+                    },
+                    onDrag: function ($item, position) {
+                        $item.css({
+                            left: position.left - adjustment.left,
+                            top: position.top - adjustment.top
+                        });
+                    }
+                });
             });
-        });
-    </script>
+        </script>
 </body>
 </html>

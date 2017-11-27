@@ -18,18 +18,50 @@
                                 <span class="info-box-icon"><i class="fa {{transactionBloc.OperationIcon}}"></i></span>
 
                                 <div class="info-box-content">
-                                    <span class="info-box-number">{{transactionBloc.OperationName}}</span>
-                                    <span class="info-box-text"><img src="~/Content/Images/budget.png" /> {{transactionBloc.TransactionAmount | currency:"CHF "}}</span>
-
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar progress-bar-danger" style="width: {{transactionBloc.Percent}}%"></div>
+                                    <div class="col-sm-6 col-xs-6 no-padding">
+                                        <div class="description-block border-right">
+                                            <h5 class="description-header">{{transactionBloc.OperationName}}</h5>
+                                        </div>
+                                        <!-- /.description-block -->
                                     </div>
-                                    <span class="progress-description">
-                                        <i class="fa fa-1x fa-credit-card"></i>  {{transactionBloc.OperationTotal | currency:"CHF "}}
-                                        <a class="box-tools pull-right plus-white" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction">
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                    </span>
+                                    <!-- /.col -->
+                                    <div class="col-sm-3 col-xs-6 no-padding">
+                                        <div class="description-block border-right">
+                                            <div class="text-small"><img src="~/Content/Images/budget.png" /></div>
+                                            <span class="text-small">{{transactionBloc.TransactionAmount | number : 2}}</span>
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-sm-3 col-xs-6 no-padding">
+                                        <div class="description-block">
+                                            <div class="text-small"><i class="fa fa-1x fa-credit-card"></i></div>
+                                            <span class="text-small">{{transactionBloc.OperationTotal | number : 2}}</span>
+                                        </div>
+                                        <!-- /.description-block -->
+                                    </div>
+                                    <div class="col-sm-12 col-xs-12">
+                                        <div class="progress progress-sm">
+                                            <div ng-if="transactionBloc.Percent >= 0" class="progress-bar progress-bar-green" style="width: {{transactionBloc.Percent / 2}}%; margin-left: 50%;"></div>
+                                            <div ng-if="transactionBloc.Percent < 0" class="progress-bar progress-bar-danger" style="width: {{transactionBloc.Percent / 2 * -1}}%; margin-left: {{50 - (transactionBloc.Percent / 2 * -1)}}%;"></div>
+                                        </div>
+                                        <div class="col-sm-10 col-xs-8 no-padding">
+                                            <div>
+                                                <span class="text-small">Solde : {{transactionBloc.Solde | number : 2}} </span>
+                                                <span class="text-green" ng-if="transactionBloc.Percent >= 0">
+                                                    [<i class="fa fa-caret-up"></i> {{transactionBloc.Percent}}%]
+                                                </span>
+                                                <span class="text-red" ng-if="transactionBloc.Percent < 0">
+                                                    [<i class="fa fa-caret-down"></i> {{transactionBloc.Percent}}%]
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-4 no-padding">
+                                            <a class="box-tools pull-right plus-white" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="collapse" id="collapseTransaction{{transactionBloc.OperationId}}">
@@ -76,8 +108,6 @@
             </div>
         </section>
     </div>
-
-    
         <!--
         <div class="card text-white operation-bloc o-hidden h-100">
             <div class="card-body">

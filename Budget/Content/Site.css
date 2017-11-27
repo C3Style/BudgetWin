@@ -28,6 +28,15 @@ div.budget-box {
 .plus-white {
     color: white;
 }
+.no-padding {
+    padding: 0px;
+}
+
+.description-block {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    min-height: 40px;
+}
 /* END IMPORTANT FOR DRAG AND DROP */
 .operation-bloc {
     background-image: linear-gradient(#007bff, #2a77cc);

@@ -27,12 +27,10 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http) {
                     var operationTotal = getOperationTotal($scope.transactionBlocArray, $scope.transactionBlocArray[i].OperationId);
                     $scope.transactionBlocArray[i].OperationTotal = operationTotal
                     $scope.transactionBlocArray[i].Solde = $scope.transactionBlocArray[i].TransactionAmount - operationTotal;
-                    var percent = 100 - ($scope.transactionBlocArray[i].TransactionAmount / operationTotal * 100);
-                    if (percent < 0)
-                    {
-                        percent = 0;
-                    }
-                    $scope.transactionBlocArray[i].Percent = percent;
+                    var percent = ($scope.transactionBlocArray[i].TransactionAmount / operationTotal * 100) - 100;
+                    $scope.transactionBlocArray[i].Percent = Math.round(percent);
+                    $scope.transactionBlocArray[i].IsNegatif = percent < 0;
+                    console.log(percent);
                 }
             }
 

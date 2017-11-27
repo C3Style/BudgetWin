@@ -7,30 +7,33 @@
     <div class="row budget-box" ng-controller="TransactionCtrl" ng-init="getTransactionBloc()">
         <section class="connectedSortable">
             <div class="budget-box-div" ng-repeat="transactionBloc in transactionBlocArray | filter: {TransactionType: 3 }">
+
+
                 <div class="box box-solid">
                     <div class="box-header">
                         <!-- small box -->
-                        <div class="small-box bg-blue">
-                            <div class="inner">
-                                <span class="float-left">
-                                    <div class="operation-title">{{transactionBloc.OperationName}}</div>
-                                    <div class="operation-budget"><img src="~/Content/Images/budget.png" /> {{transactionBloc.TransactionAmount | currency:"CHF "}}</div>
-                                </span>
-                                <span class="float-right solde" ng-class="{negativ: (transactionBloc.Solde < 0), positiv: (transactionBloc.Solde >= 0)}">
-                                    {{transactionBloc.Solde | currency:"CHF "}}
-                                </span>
+                        <div class="small-box">
+
+                            <div class="info-box bg-aqua">
+                                <span class="info-box-icon"><i class="fa {{transactionBloc.OperationIcon}}"></i></span>
+
+                                <div class="info-box-content">
+                                    <span class="info-box-number">{{transactionBloc.OperationName}}</span>
+                                    <span class="info-box-text"><img src="~/Content/Images/budget.png" /> {{transactionBloc.TransactionAmount | currency:"CHF "}}</span>
+
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-danger" style="width: {{transactionBloc.Percent}}%"></div>
+                                    </div>
+                                    <span class="progress-description">
+                                        <i class="fa fa-1x fa-credit-card"></i>  {{transactionBloc.OperationTotal | currency:"CHF "}}
+                                        <a class="box-tools pull-right plus-white" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    </span>
+                                </div>
                             </div>
-                            <div class="icon">
-                                <i class="fa fa-fw {{transactionBloc.OperationIcon}} operation-icon"></i>
-                            </div>
-                            <a class="small-box-footer" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction">
-                                <span class="float-left">Détails <i class="fa fa-angle-right"></i></span>
-                                <span class="float-right">
-                                    <i class="fa fa-1x fa-credit-card"></i> {{transactionBloc.OperationTotal | currency:"CHF "}}
-                                </span>
-                            </a>
                             <div class="collapse" id="collapseTransaction{{transactionBloc.OperationId}}">
-                                <div class="card card-block">
+                                <div class="details-bloc">
                                     <table class="table table-bordered table-hover table-condensed transactionTable">
                                         <tr ng-repeat="transaction in transactionBlocArray | filter: {TransactionType: 1 } | filter: {OperationId: transactionBloc.OperationId }">
                                             <td style="white-space: nowrap; width: 70px;">
@@ -65,6 +68,7 @@
                                     <button type="button" class="btn btn-default" ng-click="addUser()">Add row</button>
                                 </div>
                             </div>
+
 
                         </div>
                     </div>

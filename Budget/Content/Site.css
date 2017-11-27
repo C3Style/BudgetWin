@@ -10,14 +10,23 @@ div.budget-box {
 .small-box  {
     margin: 0px;
 }
-.box {
+.budget-box-div {
     margin-bottom: 10px;
+    border: 1px solid rgba(0,0,0,0.2);
 }
-
 .operation-icon {
     font-size: 80px;
     vertical-align: top;
     margin-top: 20px;
+}
+.info-box {
+    margin-bottom: 0px;
+}
+.box {
+    margin-bottom: 0px;
+}
+.plus-white {
+    color: white;
 }
 /* END IMPORTANT FOR DRAG AND DROP */
 .operation-bloc {

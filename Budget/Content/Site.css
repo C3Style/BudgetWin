@@ -1,98 +1,63 @@
-﻿/* IMPORTANT FOR DRAG AND DROP */
-div.budget-box {
-    min-height: 10px;
-    width: 50%;
-    padding: 10px;
+﻿div.budget-box {
+  min-height: 10px;
+  width: 50%;
+  padding: 10px;
 }
 .box-header {
-    padding: 0px;
+  padding: 0px;
 }
-.small-box  {
-    margin: 0px;
+.small-box {
+  margin: 0px;
 }
 .budget-box-div {
-    margin-bottom: 10px;
-    border: 1px solid rgba(0,0,0,0.2);
-}
-.operation-icon {
-    font-size: 80px;
-    vertical-align: top;
-    margin-top: 20px;
+  margin-bottom: 10px;
 }
 .info-box {
-    margin-bottom: 0px;
+  margin-bottom: 0px;
 }
 .box {
-    margin-bottom: 0px;
-}
-.plus-white {
-    color: white;
+  margin-bottom: 0px;
 }
 .no-padding {
-    padding: 0px;
+  padding: 0px;
 }
-
 .description-block {
-    margin-bottom: 5px;
-    margin-top: 5px;
-    min-height: 40px;
+  margin-bottom: 2px;
+  margin-top: 5px;
+  min-height: 40px;
 }
-/* END IMPORTANT FOR DRAG AND DROP */
-.operation-bloc {
-    background-image: linear-gradient(#007bff, #2a77cc);
+.info-box .progress {
+  height: 4px;
 }
-
-table.transactionTable {
-    color: #343a40;
-    width: 100%;
-    font-size: smaller;
-    padding: 2px;
-    vertical-align: top;
+.info-box {
+  background-color: #e6e6e6;
 }
-
-table.transactionTable td {
-    padding: 0.5rem;
+.box-header {
+  color: #4a4b4c;
 }
-
-.negativ {
-    color: #e00014;
-    background-color: white;
-    font-weight: bold;
+.small-box:hover {
+  color: #4a4b4c;
 }
-
-.negativ:before {
-    font-family: FontAwesome;
-    content: "\f12a";
-    font-weight: bold;
+a {
+  color: #4a4b4c;
 }
-
-.positiv {
-    color: #009b17;
-    background-color: white;
+a:hover {
+  color: rgba(0, 0, 0, 0.4);
 }
-
-.positiv:before {
-    font-family: FontAwesome;
-    content: "\f00c";
+.panel-title > a:before {
+  float: right !important;
+  font-family: FontAwesome;
+  content: "\f068";
+  padding-right: 5px;
 }
-
-.solde {
-    border-radius: 2rem !important;
-    padding: 10px 10px 10px 10px;
-    /*background: #68b0ff;*/
-    margin-right: 50px;
-    text-align: right;
+.panel-title > a.collapsed:before {
+  float: right !important;
+  content: "\f067";
 }
-
-.operation-title {
-    font-size: larger;
-    font-weight: bold;
+h6 {
+  margin-bottom: 0px;
+  margin-top: 0px;
 }
-
-.operation-budget {
-    font-weight: normal;
-}
-
-i.transaction-icon {
-    cursor: pointer;
+.form-control-date {
+  font-size: 10px;
 }

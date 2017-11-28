@@ -62,7 +62,7 @@ namespace Budget
                       "~/Content/jsgrid/jsgrid-theme.css",
                       "~/Content/simple-iconpicker.css",
                       "~/Content/xeditable/xeditable.css",
-                      "~/Content/site.css"
+                      "~/Content/site.min.css"
                       ));
 
         }

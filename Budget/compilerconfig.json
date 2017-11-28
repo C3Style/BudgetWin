@@ -1,0 +1,14 @@
+﻿[
+  {
+    "outputFile": "Content/AdminLTE.css",
+    "inputFile": "Content/adminlte-less/AdminLTE.less"
+  },
+  {
+    "outputFile": "Content/_all-skins.css",
+    "inputFile": "Content/adminlte-less/skins/_all-skins.less"
+  },
+  {
+    "outputFile": "Content/Site.css",
+    "inputFile": "Content/less/Site.less"
+  }
+]

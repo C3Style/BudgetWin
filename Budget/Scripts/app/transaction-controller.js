@@ -4,7 +4,9 @@ budgetApp.run(function (editableOptions) {
     // editableOptions.theme = 'bs3';
 });
 
-budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http) {
+budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $locale) {
+
+    $locale.NUMBER_FORMATS.GROUP_SEP = '\'';
 
     $scope.getTransactionBloc = function () {
         $scope.transactionBlocArray = [];

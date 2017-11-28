@@ -59,5 +59,14 @@ h6 {
   margin-top: 0px;
 }
 .form-control-date {
-  font-size: 10px;
+  padding-top: 6px;
+  padding-right: 3px;
+  padding-bottom: 6px;
+  padding-left: 3px;
+}
+.editable-wrap {
+  width: 100%;
+}
+textarea {
+  resize: vertical;
 }

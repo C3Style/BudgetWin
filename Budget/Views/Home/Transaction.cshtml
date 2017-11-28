@@ -55,23 +55,40 @@
                                 <div class="details-bloc">
                                     <table class="table table-bordered table-hover table-condensed transactionTable">
                                         <tr ng-repeat="transaction in transactionBlocArray | filter: {TransactionType: 1 } | filter: {OperationId: transactionBloc.OperationId }">
-                                            <td style="white-space: nowrap; width: 120px;">
-                                                <span e-class="form-control form-control-date" editable-date="transaction.DateFormatted" e-name="DateFormatted" e-form="rowform" e-style="width:120px;" e-required>
-                                                    {{ transaction.DateFormatted | date:"dd/MM/yyyy" }}
+                                            <td align="center" style="white-space: nowrap; width: 130px;">
+                                                <span e-class="form-control form-control-date" 
+                                                      editable-date="transaction.DateFormatted" 
+                                                      e-name="DateFormatted" 
+                                                      e-form="rowform" 
+                                                      e-style="width:130px;"
+                                                      onbeforesave="checkNotEmpty($data, transaction.TransactionId, false)"
+                                                      e-required>
+                                                    {{ transaction.DateFormatted | date:"dd.MM.yyyy" }}
                                                 </span>
                                             </td>
-                                            <td align="center">
-                                                <span e-class="form-control has-warning .form-control, .form-group.has-warning .input-group-addon" editable-textarea="transaction.TransactionRemark" e-name="TransactionRemark" e-form="rowform" e-style="width:100%;" e-required>
+                                            <td align="left">
+                                                <span e-class="form-control .has-warning" 
+                                                      editable-textarea="transaction.TransactionRemark" 
+                                                      e-name="TransactionRemark" 
+                                                      onbeforesave="checkNotEmpty($data, transaction.TransactionId, false)"
+                                                      e-form="rowform"
+                                                      e-required>
                                                     {{ transaction.TransactionRemark }}
                                                 </span>
                                             </td>
                                             <td align="right" style="white-space: nowrap; width: 100px;">
-                                                <span e-class="form-control" editable-text="transaction.TransactionAmount" e-name="TransactionAmount" e-form="rowform" e-style="width:100px; text-align: right;" e-required>
+                                                <span e-class="form-control" 
+                                                      editable-text="transaction.TransactionAmount" 
+                                                      e-name="TransactionAmount" 
+                                                      e-form="rowform" 
+                                                      e-style="width:100px; text-align: right;" 
+                                                      onbeforesave="checkNotEmpty($data, transaction.TransactionId, true)"
+                                                      e-required>
                                                     {{ transaction.TransactionAmount | currency:"CHF "}}
                                                 </span>
                                             </td>
                                             <td style="white-space: nowrap; width: 80px;">
-                                                <form editable-form name="rowform" onbeforesave="saveUser($data, user.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == transaction">
+                                                <form editable-form name="rowform" onbeforesave="saveUser($data, transaction.TransactionId, transactionBloc.OperationId)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == transaction">
                                                     <button type="submit" style="border:none; background-color: transparent;">
                                                         <i class="fa fa-2x fa-floppy-o transaction-icon" ng-disabled="rowform.$waiting"></i>
                                                     </button>
@@ -84,7 +101,9 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <button type="button" class="btn btn-default" ng-click="addUser()">Add row</button>
+                                    <span>
+                                        <button type="button" class="btn btn-default" ng-click="addTransaction()">Ajouter une nouvelle transaction</button>
+                                    </span>
                                 </div>
                             </div>
                         </div>

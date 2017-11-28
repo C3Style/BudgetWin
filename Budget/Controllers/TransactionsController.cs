@@ -84,14 +84,14 @@ namespace Budget.Controllers
 
         // PUT: api/Transactions/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutTransaction(int id, Transaction transaction)
+        public IHttpActionResult PutTransaction(int id, TransactionDTO transaction)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != transaction.Id)
+            if (id != transaction.TransactionId)
             {
                 return BadRequest();
             }
@@ -119,17 +119,17 @@ namespace Budget.Controllers
 
         // POST: api/Transactions
         [ResponseType(typeof(Transaction))]
-        public IHttpActionResult PostTransaction(Transaction transaction)
+        public IHttpActionResult PostTransaction(TransactionDTO transaction)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Transactions.Add(transaction);
+            db.Transactions.Add(new Transaction());
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = transaction.Id }, transaction);
+            return CreatedAtRoute("DefaultApi", new { id = transaction.TransactionId }, transaction);
         }
 
         // DELETE: api/Transactions/5

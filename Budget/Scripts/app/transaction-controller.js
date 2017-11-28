@@ -1,7 +1,7 @@
 ﻿var budgetApp = angular.module('BudgetApp', ["xeditable", "ui.bootstrap"]);
 
 budgetApp.run(function (editableOptions) {
-    // editableOptions.theme = 'bs3';
+    editableOptions.theme = 'bs3';
 });
 
 budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $locale) {
@@ -32,7 +32,6 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
                     var percent = ($scope.transactionBlocArray[i].TransactionAmount / operationTotal * 100) - 100;
                     $scope.transactionBlocArray[i].Percent = Math.round(percent);
                     $scope.transactionBlocArray[i].IsNegatif = percent < 0;
-                    console.log(percent);
                 }
             }
 
@@ -51,21 +50,23 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
         return total;
     }
 
-    $scope.saveUser = function (data, id) {
-        //$scope.user not updated yet
-        angular.extend(data, { id: id });
-        console.log(data);
-        return true;
-        // return $http.post('/saveUser', data);
+    $scope.saveUser = function (data, transactionId, operationId) {
+        angular.extend(data, { TransactionId: transactionId, OperationId: operationId });
+        var url = '../api/Transactions/';
+        var result = '';
+        if (transactionId != null)
+            result = $http.put(url + transactionId, data);
+        else
+            result = $http.post(url, data);
+
+        console.log(result);
+        return result;
     };
 
     // remove user
     $scope.removeUser = function (index) {
-        $scope.users.splice(index, 1);
-    };
-
-    $scope.user = {
-        dob: new Date(1984, 4, 15)
+        console.log(index);
+        $scope.transactionBlocArray.splice(index, 1);
     };
 
     $scope.opened = {};
@@ -73,19 +74,30 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
     $scope.open = function ($event, elementOpened) {
         $event.preventDefault();
         $event.stopPropagation();
-
         $scope.opened[elementOpened] = !$scope.opened[elementOpened];
     };
 
+    $scope.checkNotEmpty = function (data, id, isNumeric) {
+        if (data === undefined || data === null || data === '')
+            return "<i class='fa fa-exclamation-triangle'></i> Champ requis !";
+
+        if (isNumeric && (!$.isNumeric(data) || data <= 0))
+            return "<i class='fa fa-exclamation-triangle'></i> Erreur !";
+    };
 
     // add user
-    $scope.addUser = function () {
+    $scope.addTransaction = function () {
         $scope.inserted = {
-            identi: null,
-            name: '',
-            status: null,
-            group: null
+            DateFormatted: null,
+            OperationIcon: '',
+            OperationId: 93,
+            OperationName: '',
+            TransactionAmount: 0,
+            TransactionDate: null,
+            TransactionId: null,
+            TransactionRemark: '',
+            TransactionType: 1
         };
-        $scope.users.push($scope.inserted);
+        $scope.transactionBlocArray.push($scope.inserted);
     };
 });

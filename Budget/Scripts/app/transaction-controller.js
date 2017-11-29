@@ -1,4 +1,5 @@
 ﻿var budgetApp = angular.module('BudgetApp', ["xeditable", "ui.bootstrap"]);
+var url = '/api/Transactions'
 
 budgetApp.run(function (editableOptions) {
     editableOptions.theme = 'bs3';
@@ -12,10 +13,9 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
         $scope.transactionBlocArray = [];
         $scope.debitByOperationArray = [];
 
-        // Simple GET request example:
         $http({
             method: 'GET',
-            url: '/api/Transactions/GetTransactionBloc/2010-11-01'
+            url: url + '/GetTransactionBloc/2010-11-01'
         }).then(function successCallback(response) {
             $scope.transactionBlocArray = response.data;
 
@@ -51,16 +51,45 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
     }
 
     $scope.saveUser = function (data, transactionId, operationId) {
-        angular.extend(data, { TransactionId: transactionId, OperationId: operationId });
-        var url = '../api/Transactions/';
+
+        var transaction = {
+            Id: transactionId,
+            OperationId: operationId,
+            Amount: data.TransactionAmount,
+            Remark: data.TransactionRemark,
+            Date: data.TransactionDate,
+            TypeId: 1
+        };
+
         var result = '';
         if (transactionId != null)
-            result = $http.put(url + transactionId, data);
-        else
-            result = $http.post(url, data);
-
-        console.log(result);
-        return result;
+            return $.ajax({
+                type: "PUT",
+                url: url + "/" + transactionId,
+                data: transaction,
+                dataType: "json",
+                success: function () {
+                    toastr.success("La transaction a correctement été modifiée.");
+                },
+                error: function (xhr, status, err) {
+                    toastr.error("Erreur, la transaction n'a pas été modifiée. Cause : " + err);
+                }
+            });
+        else {
+            transaction.Id = 0;
+            return $.ajax({
+                type: "POST",
+                url: url,
+                data: transaction,
+                dataType: "json",
+                success: function () {
+                    toastr.success("La transaction a correctement été ajoutée.");
+                },
+                error: function (xhr, status, err) {
+                    toastr.error("Erreur, la transaction n'a pas été ajoutée. Cause : " + err);
+                }
+            });
+        }
     };
 
     // remove user
@@ -86,11 +115,11 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
     };
 
     // add user
-    $scope.addTransaction = function () {
+    $scope.addTransaction = function (operationId) {
         $scope.inserted = {
             DateFormatted: null,
             OperationIcon: '',
-            OperationId: 93,
+            OperationId: operationId,
             OperationName: '',
             TransactionAmount: 0,
             TransactionDate: null,

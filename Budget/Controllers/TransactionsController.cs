@@ -84,14 +84,23 @@ namespace Budget.Controllers
 
         // PUT: api/Transactions/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutTransaction(int id, TransactionDTO transaction)
+        public IHttpActionResult PutTransaction(int id, TransactionDTO trans)
         {
+            Transaction transaction = db.Transactions.Find(id);
+            transaction.AcccountId = db.account;
+            transaction.Login = db.user;
+            transaction.OperationId = trans.OperationId;
+            transaction.TypeId = trans.TransactionType;
+            transaction.Date = trans.TransactionDate;
+            transaction.Remark = trans.TransactionRemark;
+            transaction.Amount = trans.TransactionAmount;
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != transaction.TransactionId)
+            if (id != transaction.Id)
             {
                 return BadRequest();
             }
@@ -119,17 +128,20 @@ namespace Budget.Controllers
 
         // POST: api/Transactions
         [ResponseType(typeof(Transaction))]
-        public IHttpActionResult PostTransaction(TransactionDTO transaction)
+        public IHttpActionResult PostTransaction(Transaction transaction)
         {
+            transaction.AcccountId = db.account;
+            transaction.Login = db.user;
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Transactions.Add(new Transaction());
+            db.Transactions.Add(transaction);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = transaction.TransactionId }, transaction);
+            return CreatedAtRoute("DefaultApi", new { id = transaction.Id }, transaction);
         }
 
         // DELETE: api/Transactions/5

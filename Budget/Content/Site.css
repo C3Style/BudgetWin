@@ -70,3 +70,7 @@ h6 {
 textarea {
   resize: vertical;
 }
+button {
+  padding-right: 2px;
+  padding-left: 2px;
+}

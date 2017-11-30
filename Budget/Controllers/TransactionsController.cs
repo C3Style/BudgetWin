@@ -84,16 +84,10 @@ namespace Budget.Controllers
 
         // PUT: api/Transactions/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutTransaction(int id, TransactionDTO trans)
+        public IHttpActionResult PutTransaction(int id, Transaction transaction)
         {
-            Transaction transaction = db.Transactions.Find(id);
             transaction.AcccountId = db.account;
             transaction.Login = db.user;
-            transaction.OperationId = trans.OperationId;
-            transaction.TypeId = trans.TransactionType;
-            transaction.Date = trans.TransactionDate;
-            transaction.Remark = trans.TransactionRemark;
-            transaction.Amount = trans.TransactionAmount;
 
             if (!ModelState.IsValid)
             {
@@ -139,6 +133,17 @@ namespace Budget.Controllers
             }
 
             db.Transactions.Add(transaction);
+            db.SaveChanges();
+
+            Recurrence newRecurrence = new Recurrence()
+            {
+                IsPaid = false,
+                Month = transaction.Date.Month,
+                Year = transaction.Date.Year,
+                TransactionId = transaction.Id
+            };
+
+            db.Recurrences.Add(newRecurrence);
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = transaction.Id }, transaction);

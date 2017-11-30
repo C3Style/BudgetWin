@@ -36,7 +36,7 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
             }
 
         }, function errorCallback(response) {
-            console.log(response);
+            toastr.error("Erreur lors de la récupération des transactions. Cause : " + response);
         });            
     };
 
@@ -50,6 +50,25 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
         return total;
     }
 
+    function updateTotalAmount(transactionId, isDelete) {
+        var transactionDebit = $.grep($scope.transactionBlocArray, function (e) {
+            return e.TransactionId == transactionId;
+        });
+
+        var transactionBudget = $.grep($scope.transactionBlocArray, function (e) {
+            return e.OperationId == transactionDebit.OperationId && e.TransactionType == 3;
+        });
+
+        if (isDelete)
+            transactionBudget.Solde = transactionBudget.Solde - transactionDebit.TransactionAmount;
+        else
+            transactionBudget.Solde = transactionBudget.Solde + transactionDebit.TransactionAmount;
+
+        var percent = (transactionBudget.TransactionAmount / transactionBudget.Solde * 100) - 100;
+        transactionBudget.Percent = Math.round(percent);
+        transactionBudget.IsNegatif = percent < 0;
+    }
+
     $scope.saveUser = function (data, transactionId, operationId) {
 
         var transaction = {
@@ -57,7 +76,7 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
             OperationId: operationId,
             Amount: data.TransactionAmount,
             Remark: data.TransactionRemark,
-            Date: data.TransactionDate,
+            Date: data.DateFormatted.toJSON(),
             TypeId: 1
         };
 
@@ -90,14 +109,23 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
                 }
             });
         }
+
+        updateTotalAmount(transactionId, true);
     };
 
     // remove user
-    $scope.removeUser = function (index) {
-        console.log(index);
-        $scope.transactionBlocArray.splice(index, 1);
+    $scope.removeTransaction = function (index, transactionId) {
+        console.log($scope.transactionBlocArray);
+
+        var data = $.grep($scope.transactionBlocArray, function (e) {
+            return e.TransactionId != transactionId;
+        });
+
+        $scope.transactionBlocArray = data;
+        updateTotalAmount(transactionId, true);
     };
 
+    /*
     $scope.opened = {};
 
     $scope.open = function ($event, elementOpened) {
@@ -105,7 +133,7 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
         $event.stopPropagation();
         $scope.opened[elementOpened] = !$scope.opened[elementOpened];
     };
-
+    */
     $scope.checkNotEmpty = function (data, id, isNumeric) {
         if (data === undefined || data === null || data === '')
             return "<i class='fa fa-exclamation-triangle'></i> Champ requis !";

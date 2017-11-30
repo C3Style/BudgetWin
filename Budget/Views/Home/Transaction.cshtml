@@ -92,11 +92,17 @@
                                                     <button type="submit" style="border:none; background-color: transparent;">
                                                         <i class="fa fa-2x fa-floppy-o transaction-icon" ng-disabled="rowform.$waiting"></i>
                                                     </button>
-                                                    <i class="fa fa-2x fa-ban transaction-icon" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"></i>
+                                                    <button type="button" style="border:none; background-color: transparent;">
+                                                        <i class="fa fa-2x fa-ban transaction-icon" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"></i>
+                                                    </button>
                                                 </form>
                                                 <div class="buttons" ng-show="!rowform.$visible">
-                                                    <i class="fa fa-2x fa-pencil-square-o transaction-icon" ng-click="rowform.$show()"></i>
-                                                    <i class="fa fa-2x fa-trash-o transaction-icon" ng-click="removeUser($index)"></i>
+                                                    <button type="button" style="border:none; background-color: transparent;">
+                                                        <i class="fa fa-2x fa-pencil-square-o transaction-icon" ng-click="rowform.$show()"></i>
+                                                    </button>
+                                                    <button type="button" style="border:none; background-color: transparent;">
+                                                        <i class="fa fa-2x fa-trash-o transaction-icon" ng-click="removeTransaction($index, transaction.TransactionId)"></i>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>

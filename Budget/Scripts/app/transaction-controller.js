@@ -54,19 +54,20 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
         var transactionDebit = $.grep($scope.transactionBlocArray, function (e) {
             return e.TransactionId == transactionId;
         });
-
+        console.log(transactionDebit[0]);
         var transactionBudget = $.grep($scope.transactionBlocArray, function (e) {
-            return e.OperationId == transactionDebit.OperationId && e.TransactionType == 3;
+            return e.OperationId == transactionDebit[0].OperationId && e.TransactionType == 3;
         });
-
+        console.log(transactionBudget[0]);
         if (isDelete)
-            transactionBudget.Solde = transactionBudget.Solde - transactionDebit.TransactionAmount;
+            transactionBudget[0].OperationTotal = transactionBudget[0].OperationTotal - transactionDebit[0].TransactionAmount;
         else
-            transactionBudget.Solde = transactionBudget.Solde + transactionDebit.TransactionAmount;
+            transactionBudget[0].OperationTotal = transactionBudget[0].OperationTotal + transactionDebit[0].TransactionAmount;
 
-        var percent = (transactionBudget.TransactionAmount / transactionBudget.Solde * 100) - 100;
-        transactionBudget.Percent = Math.round(percent);
-        transactionBudget.IsNegatif = percent < 0;
+        var percent = 100 - (transactionBudget[0].OperationTotal / transactionBudget[0].TransactionAmount  * 100);
+        transactionBudget[0].Solde = transactionBudget[0].TransactionAmount - transactionBudget[0].OperationTotal;
+        transactionBudget[0].Percent = Math.round(percent);
+        transactionBudget[0].IsNegatif = percent < 0;
     }
 
     $scope.saveUser = function (data, transactionId, operationId) {
@@ -115,14 +116,14 @@ budgetApp.controller('TransactionCtrl', function ($scope, $filter, $http, $local
 
     // remove user
     $scope.removeTransaction = function (index, transactionId) {
-        console.log($scope.transactionBlocArray);
+
+        updateTotalAmount(transactionId, true);
 
         var data = $.grep($scope.transactionBlocArray, function (e) {
             return e.TransactionId != transactionId;
         });
 
         $scope.transactionBlocArray = data;
-        updateTotalAmount(transactionId, true);
     };
 
     /*

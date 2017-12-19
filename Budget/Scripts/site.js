@@ -4,6 +4,13 @@
  * You should not use this file in production.
  * This file is for demo purposes only.
  */
+var budgetApp = angular.module('BudgetApp', ["xeditable", "ui.bootstrap"]);
+
+// Create the factory that share the Fact
+budgetApp.factory('CurrentDate', function () {
+    return { Value: new Date() };
+});
+
 $(function () {
   'use strict'
 

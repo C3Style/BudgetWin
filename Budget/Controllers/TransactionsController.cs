@@ -153,6 +153,12 @@ namespace Budget.Controllers
         [ResponseType(typeof(Transaction))]
         public IHttpActionResult DeleteTransaction(int id)
         {
+            var recurrenceColToDelete = db.Recurrences.Where(x => x.TransactionId == id);
+            foreach(var recurrence in recurrenceColToDelete)
+            {
+                db.Recurrences.Remove(recurrence);
+            }
+
             Transaction transaction = db.Transactions.Find(id);
             if (transaction == null)
             {

@@ -39,6 +39,7 @@ namespace Budget
                         "~/Scripts/simple-iconpicker.js",
                         "~/Scripts/xeditable/xeditable.js",
                         "~/Scripts/site.js",
+                        "~/Scripts/app/layout-controller.js",
                         "~/Scripts/app/transaction-controller.js"
                         ));
 

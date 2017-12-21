@@ -18,5 +18,6 @@ namespace Budget
         public int TransactionType { get; set; }
         public DateTime TransactionDate { get; set; }
         public string TransactionRemark { get; set; }
+        public bool IsPaid { get; set; }
     }
 }

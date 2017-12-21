@@ -142,7 +142,15 @@
                     title: "Nom",
                     type: 'text',
                     filtering: true,
+                    autosearch: true,
                     validate: { message: "Le nom est requis", validator: "required" },
+                },
+                {
+                    name: 'IsCredit',
+                    title: "Opération de crédit",
+                    type: 'checkbox',
+                    autosearch: true,
+                    filtering: true,
                 },
                 {
                     type: "control",

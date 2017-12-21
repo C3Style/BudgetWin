@@ -9,7 +9,12 @@ Ceci afin de mettre à jour MySQL (Ce n'est pas grave s'il y a des erreurs)
 
 Redémarrer ensuite le serveur MySQL : il doit être au minimum en 5.7.11
 */
+ALTER TABLE `operation_t` ADD `OP_IS_CREDIT` BOOLEAN DEFAULT 0 AFTER `OP_NAME`;
 
 ALTER TABLE `operation_t` ADD `OP_ICON` VARCHAR(100) NULL AFTER `OP_LOGIN`; 
 
 ALTER TABLE `recurrence_t` ADD `RE_ID` INT UNSIGNED NOT NULL AUTO_INCREMENT, ADD INDEX (`RE_ID`);
+
+UPDATE `type_t` SET `TY_NAME`='Budget débit' WHERE `TY_NAME` = 'Budget';
+
+INSERT INTO `type_t`(`TY_ID`, `TY_NAME`) VALUES (4,'Budget crédit');

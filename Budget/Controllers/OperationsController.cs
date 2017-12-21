@@ -17,10 +17,11 @@ namespace Budget.Controllers
         private BudgetContext db = new BudgetContext();
 
         // GET: api/Operations
-        public IQueryable<Operation> GetOperations([FromUri]string name = null)
+        public IQueryable<Operation> GetOperations([FromUri]string name = null, [FromUri]bool? isCredit = null)
         {
             return db.Operations
                 .Where(x => name == null || x.Name.Contains(name))
+                .Where(x => isCredit == null || x.IsCredit == isCredit)
                 .Where(x => x.AcccountId == db.account)
                 .Where(x => x.Login == db.user)
                 .OrderBy(x => x.Name);

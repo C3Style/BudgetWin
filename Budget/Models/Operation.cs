@@ -21,6 +21,9 @@ namespace Budget
         [Column("OP_NAME")]
         public string Name { get; set; }
 
+        [Column("OP_IS_CREDIT")]
+        public bool IsCredit { get; set; }
+
         [Column("OP_LOGIN")]
         public string Login { get; set; }
 

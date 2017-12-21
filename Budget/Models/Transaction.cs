@@ -41,5 +41,8 @@ namespace Budget
 
         [Column("TR_AC_ID")]
         public string AcccountId { get; set; }
+
+        [NotMapped]
+        public virtual bool IsPaid { get; set; }
     }
 }

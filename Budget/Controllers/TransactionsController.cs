@@ -29,6 +29,7 @@ namespace Budget.Controllers
                 .Where(x => x.ReTr.Re.Year == date.Year)
                 .Include(x => x.ReTr.Tr.Operation)
                 .Include(x => x.ReTr.Tr.Type)
+                .OrderBy(x => x.Op.Name)
                 .Select(x => new TransactionDTO
                 {
                     TransactionId = x.ReTr.Tr.Id,
@@ -38,7 +39,8 @@ namespace Budget.Controllers
                     TransactionAmount = x.ReTr.Tr.Amount,
                     TransactionType = x.ReTr.Tr.TypeId,
                     TransactionDate = x.ReTr.Tr.Date,
-                    TransactionRemark = x.ReTr.Tr.Remark
+                    TransactionRemark = x.ReTr.Tr.Remark,
+                    IsPaid = x.ReTr.Re.IsPaid
                 });
         }
 
@@ -99,6 +101,14 @@ namespace Budget.Controllers
                 return BadRequest();
             }
 
+            var recurrenceToUpdate = db.Recurrences
+                .Where(x => x.TransactionId == id)
+                .Where(x => x.Month == transaction.Date.Month)
+                .Where(x => x.Year == transaction.Date.Year)
+                .Single();
+
+            recurrenceToUpdate.IsPaid = transaction.IsPaid;
+            db.Entry(recurrenceToUpdate).State = EntityState.Modified;
             db.Entry(transaction).State = EntityState.Modified;
 
             try
@@ -137,7 +147,7 @@ namespace Budget.Controllers
 
             Recurrence newRecurrence = new Recurrence()
             {
-                IsPaid = false,
+                IsPaid = transaction.IsPaid,
                 Month = transaction.Date.Month,
                 Year = transaction.Date.Year,
                 TransactionId = transaction.Id

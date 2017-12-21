@@ -4,8 +4,8 @@
     <title>Liste des transactions</title>
 </head>
 <body>
-    <div class="row budget-box" ng-controller="TransactionCtrl" ng-init="getTransactionBloc()">
-        <section class="connectedSortable">
+    <div class="column" ng-controller="TransactionCtrl" ng-init="getTransactionBloc(1)">
+        <!-- <section class="connectedSortable"> -->
             <div class="budget-box-div" ng-repeat="transactionBloc in transactionBlocArray | filter: {TransactionType: 3 }">
                 <div class="box box-solid">
                     <div class="box-header">
@@ -87,8 +87,17 @@
                                                     {{ transaction.TransactionAmount | currency:"CHF "}}
                                                 </span>
                                             </td>
+                                            <td align="right" style="white-space: nowrap; width: 50px;">
+                                                <span e-class="form-control"
+                                                      editable-checkbox="transaction.IsPaid"
+                                                      e-name="IsPaid"
+                                                      e-form="rowform"
+                                                      e-style="width:50px"/>
+                                                      {{ transaction.IsPaid && "Non payé" || "Payé" }}
+                                                <span/>
+                                            </td>
                                             <td style="white-space: nowrap; width: 80px;">
-                                                <form editable-form name="rowform" onbeforesave="saveUser($data, transaction.TransactionId, transactionBloc.OperationId)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == transaction">
+                                                <form editable-form name="rowform" onbeforesave="saveUser($data, transaction.TransactionId, transactionBloc.OperationId, 1)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == transaction">
                                                     <button type="submit" style="border:none; background-color: transparent;">
                                                         <i class="fa fa-2x fa-floppy-o transaction-icon" ng-disabled="rowform.$waiting"></i>
                                                     </button>
@@ -101,14 +110,14 @@
                                                         <i class="fa fa-2x fa-pencil-square-o transaction-icon" ng-click="edit(); rowform.$show();"></i>
                                                     </button>
                                                     <button type="button" style="border:none; background-color: transparent;">
-                                                        <i class="fa fa-2x fa-trash-o transaction-icon" ng-click="removeTransaction($index, transaction.TransactionId)"></i>
+                                                        <i class="fa fa-2x fa-trash-o transaction-icon" ng-click="removeTransaction($index, transaction.TransactionId, 1)"></i>
                                                     </button>
                                                 </div>
                                             </td>
                                         </tr>
                                     </table>
                                     <div>
-                                        <button type="button" class="btn btn-default addButton" ng-disabled="isDisabled()" ng-click="addTransaction(transactionBloc.OperationId)">
+                                        <button type="button" class="btn btn-default addButton" ng-disabled="isDisabled()" ng-click="addTransaction(transactionBloc.OperationId, 1)">
                                             <i class="fa fa-2x fa-plus"></i>
                                         </button>
                                     </div>
@@ -118,7 +127,120 @@
                     </div>
                 </div>
             </div>
-        </section>
+        <!-- </section> -->
+    </div>
+    <div class="column" ng-controller="TransactionCtrl" ng-init="getTransactionBloc(2)">
+        <!-- <section class="connectedSortable"> -->
+            <div class="budget-box-div" ng-repeat="transactionBloc in transactionBlocArray | filter: {TransactionType: 4 }">
+                <div class="box box-solid">
+                    <div class="box-header">
+                        <div class="small-box">
+                            <div class="info-box ">
+                                <span class="info-box-icon"><i class="fa {{transactionBloc.OperationIcon}} fa-operation-icon"></i></span>
+                                <div class="info-box-content">
+                                    <div class="col-sm-6 col-xs-6 no-padding">
+                                        <div class="description-block border-right">
+                                            <h5 class="description-header">{{transactionBloc.OperationName}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 col-xs-6 no-padding">
+                                        <div class="description-block border-right">
+                                            <div class="text-small"><h6>Budget</h6></div>
+                                            <span class="text-small"><b>{{transactionBloc.TransactionAmount | currency : "CHF "}}</b></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 col-xs-6 no-padding">
+                                        <div class="description-block">
+                                            <div class="text-small"><h6>Crédits</h6></div>
+                                            <span class="text-small"><b>{{transactionBloc.OperationTotal | currency : "CHF "}}</b></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-xs-12">
+                                        <div class="col-sm-10 col-xs-8 no-padding">
+                                            <div>
+                                                <span class="text-small">Gain : <b ng-class="transactionBloc.Percent == 0 ? '' : transactionBloc.Percent > 0 ? 'text-green' : 'text-red'">{{transactionBloc.Solde | currency : "CHF "}}</b></span>
+                                                <b class="text-green" ng-if="transactionBloc.Percent > 0">
+                                                    [<i class="fa fa-caret-up"></i> {{transactionBloc.Percent}}%]
+                                                </b>
+                                                <b class="text-red" ng-if="transactionBloc.Percent < 0">
+                                                    [<i class="fa fa-caret-down"></i> {{transactionBloc.Percent}}%]
+                                                </b>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-4 no-padding panel-title">
+                                            <a class="collapsed" data-toggle="collapse" href="#collapseTransaction{{transactionBloc.OperationId}}" aria-expanded="false" aria-controls="collapseTransaction"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="collapse" id="collapseTransaction{{transactionBloc.OperationId}}">
+                                <div class="details-bloc">
+                                    <table class="table table-bordered table-hover table-condensed transactionTable">
+                                        <tr ng-repeat="transaction in transactionBlocArray | filter: {TransactionType: 2 } | filter: {OperationId: transactionBloc.OperationId }">
+                                            <td align="center" style="white-space: nowrap; width: 130px;">
+                                                <span e-class="form-control form-control-date"
+                                                      editable-date="transaction.DateFormatted"
+                                                      e-name="DateFormatted"
+                                                      e-form="rowform"
+                                                      e-style="width:130px;"
+                                                      onbeforesave="checkNotEmpty($data, transaction.TransactionId, false)"
+                                                      e-required>
+                                                    {{ transaction.DateFormatted | date:"dd.MM.yyyy" }}
+                                                </span>
+                                            </td>
+                                            <td align="left">
+                                                <span e-class="form-control .has-warning"
+                                                      editable-textarea="transaction.TransactionRemark"
+                                                      e-name="TransactionRemark"
+                                                      onbeforesave="checkNotEmpty($data, transaction.TransactionId, false)"
+                                                      e-form="rowform"
+                                                      e-required>
+                                                    {{ transaction.TransactionRemark }}
+                                                </span>
+                                            </td>
+                                            <td align="right" style="white-space: nowrap; width: 100px;">
+                                                <span e-class="form-control"
+                                                      editable-text="transaction.TransactionAmount"
+                                                      e-name="TransactionAmount"
+                                                      e-form="rowform"
+                                                      e-style="width:100px; text-align: right;"
+                                                      onbeforesave="checkNotEmpty($data, transaction.TransactionId, true)"
+                                                      e-required>
+                                                    {{ transaction.TransactionAmount | currency:"CHF "}}
+                                                </span>
+                                            </td>
+                                            <td style="white-space: nowrap; width: 80px;">
+                                                <form editable-form name="rowform" onbeforesave="saveUser($data, transaction.TransactionId, transactionBloc.OperationId, 2)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == transaction">
+                                                    <button type="submit" style="border:none; background-color: transparent;">
+                                                        <i class="fa fa-2x fa-floppy-o transaction-icon" ng-disabled="rowform.$waiting"></i>
+                                                    </button>
+                                                    <button type="button" style="border:none; background-color: transparent;">
+                                                        <i class="fa fa-2x fa-ban transaction-icon" ng-disabled="rowform.$waiting" ng-click="cancel(); rowform.$cancel()"></i>
+                                                    </button>
+                                                </form>
+                                                <div class="buttons" ng-show="!rowform.$visible">
+                                                    <button type="button" style="border:none; background-color: transparent;" ng-disabled="isDisabled()">
+                                                        <i class="fa fa-2x fa-pencil-square-o transaction-icon" ng-click="edit(); rowform.$show();"></i>
+                                                    </button>
+                                                    <button type="button" style="border:none; background-color: transparent;">
+                                                        <i class="fa fa-2x fa-trash-o transaction-icon" ng-click="removeTransaction($index, transaction.TransactionId, 2)"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div>
+                                        <button type="button" class="btn btn-default addButton" ng-disabled="isDisabled()" ng-click="addTransaction(transactionBloc.OperationId, 2)">
+                                            <i class="fa fa-2x fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- </section> -->
     </div>
 </body>
 </html>
